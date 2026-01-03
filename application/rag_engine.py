@@ -1,5 +1,4 @@
 from domain import EmbeddingModel, RAGWorkFlow, DocumentStore, RAGResult, Document, StorageType
-from typing import List
 
 class RAGEngine:
     #Orchestrator for RAG Operations
