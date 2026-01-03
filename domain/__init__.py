@@ -1,5 +1,5 @@
 from .interfaces import EmbeddingModel, DocumentStore, RAGWorkFlow
-from .models import Document, RAGResult
+from .models import Document, RAGResult, StorageType
 __all__=[
         #interfaces
         "EmbeddingModel",
@@ -8,4 +8,5 @@ __all__=[
         #models,
         "Document",
         "RAGResult",
+        "StorageType"
         ]

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from application import RAGResult
 from typing import List
+from .models import StorageType
 
 #'template' or abstract class for other classes
 class EmbeddingModel(ABC):
@@ -26,6 +27,11 @@ class DocumentStore(ABC):
 
     @abstractmethod
     def count(self) -> int:
+        pass
+
+    @property
+    @abstractmethod
+    def type(self) -> StorageType:
         pass
 
     @property
