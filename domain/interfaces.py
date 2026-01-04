@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from application import RAGResult
 from typing import List
-from .models import StorageType
+from .models import StorageType, RAGResult, Document
 
 #'template' or abstract class for other classes
 class EmbeddingModel(ABC):

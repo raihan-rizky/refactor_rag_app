@@ -7,7 +7,7 @@ class InMemoryDocumentStore(DocumentStore):
         self._documents: List[Document] = []
 
     def add(self, text:str, embedding: List[float]) -> Document:
-        doc_id = length(self._documents)
+        doc_id = len(self._documents)
         doc = Document(doc_id, text)
         self._documents.append(doc)
         return doc
@@ -23,18 +23,15 @@ class InMemoryDocumentStore(DocumentStore):
 
         for doc in self._documents:
             if query.lower() in doc.text.lower():
-                results.apppend(doc)
+                results.append(doc)
                 if len(results) >= limit:
                     break
-        if not results and doc_memory:
-            results = [docs_memory[0]]
 
         return results
     @property
     def type(self) -> StorageType:
         return StorageType.IN_MEMORY
         
-    @property
     def count(self) ->int:
         return len(self._documents)
 

@@ -1,5 +1,5 @@
 from langgraph.graph import StateGraph, END
-from domain import EmbeddingModel, DocumentStore, Document, RAGWorkFlow
+from domain import EmbeddingModel, DocumentStore, RAGResult, RAGWorkFlow
 from typing import Any, Dict
 from application import MAX_CONTEXT_CHARS
 
@@ -10,7 +10,7 @@ class LangGraphRAG(RAGWorkFlow):
         self,
         embedding_model: EmbeddingModel,
         document_store: DocumentStore,
-        max_content_chars: MAX_CONTEXT_CHARS
+        max_content_chars: int = MAX_CONTEXT_CHARS
 
     ):
         self._embedding_model = embedding_model
@@ -40,7 +40,7 @@ class LangGraphRAG(RAGWorkFlow):
 
 
         if context:
-            preview = context[0].text[:self._max_context_chars]  # Document has .text
+            preview = context[0].text[:self._max_content_chars]  # Document has .text
             answer = f'I found this: "{preview}..."'
 
         else:
@@ -49,6 +49,23 @@ class LangGraphRAG(RAGWorkFlow):
         state["answer"] = answer
         return state
 
+    def _retrieve_node(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        # Ambil pertanyaan dari state
+        query = state["question"]
+
+        # Embed pertanyaannya pake embedding_service
+        query_embedding = self._embedding_model.embed(query)
+
+        # Cari dokumen yang mirip di DB (vector similarity search)
+        results = self._document_store.search(
+            query_embedding=query_embedding,
+            limit=2
+        )
+
+        # Simpen hasilnya ke state biar bisa dipake node selanjutnya ("answer")
+        state["context"] = results
+
+        return state # Lanjut ke node berikutnya
     def invoke(self, question: str) -> RAGResult:
 
 

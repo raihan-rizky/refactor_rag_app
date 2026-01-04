@@ -4,13 +4,8 @@ from api import router
 
 #Application factory that creates and configures the FastAPI app.
 def create_app() -> FastAPI:
-    app = FastAPI(
-        title="Learning RAG Demo",
-        description="A refactored RAG service with clean architecture",
-        version="3.0.0"
-    )
+    app = FastAPI(title="Refactored RAG App")
     
-    # Include API routes
     app.include_router(router)
     
     return app

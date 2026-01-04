@@ -1,5 +1,5 @@
 from domain import EmbeddingModel
-from application VECTOR_DIMENSION
+from application.config import VECTOR_DIMENSION
 from typing import List
 import random
 

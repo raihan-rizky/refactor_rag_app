@@ -30,7 +30,7 @@ class QdrantDocumentStore(DocumentStore):
                 )
             )
         except Exception as e:
-            print(f"⚠️  Failed to initialize Qdrant: {e}")
+            print(f"[WARNING] Failed to initialize Qdrant: {e}")
             self._client = None
     #change text and vector to PointStruct format then save it to qdrant
     def add(self, text: str, embedding: List[float]) -> Document:
@@ -39,7 +39,7 @@ class QdrantDocumentStore(DocumentStore):
         doc_id = self._doc_counter
         self._doc_counter += 1
         self._client.upsert(
-            collection_name=self._collection_name
+            collection_name=self._collection_name,
             points=[PointStruct(
                 id=doc_id,
                 vector=embedding,

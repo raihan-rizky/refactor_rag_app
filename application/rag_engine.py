@@ -20,14 +20,14 @@ class RAGEngine:
     def add_document(self, text: str) -> Document:
 
         embedding = self._embedding_model.embed(text)
-        return self._document_store.add(embedding)
+        return self._document_store.add(text, embedding)
     
     @property
     def document_count(self) -> int:
         return self._document_store.count()
 
     @property
-    def is_rag_engine_ready(self) -> bool:
+    def is_ready(self) -> bool:
         return self._rag_workflow.is_ready and self._document_store.is_ready
 
     @property

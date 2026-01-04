@@ -4,36 +4,34 @@
 """
 from typing import Optional
 from domain import DocumentStore, EmbeddingModel, RAGWorkFlow, StorageType
-from .config import QDRANT_HOST, COLLECTION_NAME, VECTOR_DIMENSION
+from .config import QDRANT_HOST, QDRANT_COLLECTION_NAME, VECTOR_DIMENSION
 
 #create an embbeder instance
 def create_embedder() -> "Embedder":
     from infrastructure.embeddings import FakeEmbeddingService
 
     return FakeEmbeddingService()
-
-# Factory with fallback logic 
+ 
 # try to connect qdrant first, if it fail then fallback to in-memory
 def create_document_store(vector_size: Optional[int]) ->"DocumentStore":
-    from infrastrwucture.storage import InMemoryDocumentStore, QdrantDocumentStore
+    from infrastructure.stores import InMemoryDocumentStore, QdrantDocumentStore
 
     size = vector_size or VECTOR_DIMENSION
 
     try:
         store = QdrantDocumentStore(
             host= QDRANT_HOST,
-            collection_name = COLLECTION_NAME,
+            collection_name = QDRANT_COLLECTION_NAME,
             vector_size = size
 
         )
 
         if store.is_ready:
-            store.type
             print("Connected to Qdrant")
             return store
     except Exception as e:
-        print(f"⚠️  Qdrant connection failed: {e}")
-    print("Usin in memory document store")
+        print(f"[WARNING] Qdrant connection failed: {e}")
+    print("Using in memory document store")
     return InMemoryDocumentStore()
 
 #build default workflow with LangGraphRAG
@@ -45,7 +43,7 @@ def create_workflow(
     from infrastructure.workflow import LangGraphRAG
 
     return LangGraphRAG(
-        embedding_service=embedder,
+        embedding_model=embedder,
         document_store=document_store
     )
 
