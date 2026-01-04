@@ -5,6 +5,7 @@ from application import MAX_CONTEXT_CHARS
 
 #Orchestrator RAG System
 class LangGraphRAG(RAGWorkFlow):
+    #Encapsulates the RAG (Retrieve -> Answer) workflow.
     def __init__(
         self,
         embedding_model: EmbeddingModel,
@@ -17,14 +18,16 @@ class LangGraphRAG(RAGWorkFlow):
         self._max_content_chars = max_content_chars
         self._chain = self._build_workflow()
    
-    #Build graph
+    #Build and compile LangGraph workflow
     def _build_workflow(self) -> Any:
-        
+        #set empty LangGraph state as dictionary
         workflow = StateGraph(dict)
         
+        #add retrieve and answer node to graph
         workflow.add_node("retrieve", self._retrieve_node)
         workflow.add_node("answer", self._answer_node)
 
+        #set entry point and exit
         workflow.set_entry_point("retrieve")
         workflow.add_edge("retrieve", "answer")
         workflow.add_edge("answer", END)

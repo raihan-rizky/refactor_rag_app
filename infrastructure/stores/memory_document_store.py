@@ -1,7 +1,7 @@
 from domain import DocumentStore, Document, StorageType
 from typing import List
 
-
+#subclass to handle in-memory fallback
 class InMemoryDocumentStore(DocumentStore):
     def __init__(self):
         self._documents: List[Document] = []
