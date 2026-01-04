@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## Refactored RAG App
 
 Refactored version of the simple RAG following clean architecture principles.
@@ -35,6 +34,3 @@ uvicorn main:app --reload
 | POST   | /add     | Add document |
 | POST   | /ask     | Ask question |
 | GET    | /status  | Check status |
-=======
-See [notes.md](./notes.md) for main design decisions, trade-offs, and how this version improves maintainability.
->>>>>>> 4e951a2b75f073caa65b3a9b1ec7a23e330bc7fe
