@@ -35,37 +35,29 @@ class LangGraphRAG(RAGWorkFlow):
         return workflow.compile()
 
     def _answer_node(self, state: Dict[str, Any]) -> Dict[str, Any]:
-
         context = state.get("context", [])
 
-
         if context:
-            preview = context[0].text[:self._max_content_chars]  # Document has .text
-            answer = f'I found this: "{preview}..."'
-
+            preview = context[0].text[:100]
+            answer = f"I found this: '{preview}...'"
         else:
-            answer = "I don't know."
+            answer = "Sorry, I don't know."
 
         state["answer"] = answer
         return state
 
     def _retrieve_node(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        # Ambil pertanyaan dari state
         query = state["question"]
-
-        # Embed pertanyaannya pake embedding_service
         query_embedding = self._embedding_model.embed(query)
-
-        # Cari dokumen yang mirip di DB (vector similarity search)
+        
         results = self._document_store.search(
             query_embedding=query_embedding,
-            limit=2
+            limit=2,
+            query_text=query
         )
 
-        # Simpen hasilnya ke state biar bisa dipake node selanjutnya ("answer")
         state["context"] = results
-
-        return state # Lanjut ke node berikutnya
+        return state
     def invoke(self, question: str) -> RAGResult:
 
 

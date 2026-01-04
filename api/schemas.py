@@ -30,6 +30,6 @@ class DocumentResponse(BaseModel):
 
 
 class StatusResponse(BaseModel):
-    document_count: int
-    engine_ready: bool
     qdrant_ready: bool
+    in_memory_docs_count: int
+    graph_ready: bool

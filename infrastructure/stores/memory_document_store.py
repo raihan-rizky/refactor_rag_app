@@ -1,5 +1,5 @@
 from domain import DocumentStore, Document, StorageType
-from typing import List
+from typing import List, Optional
 
 #subclass to handle in-memory fallback
 class InMemoryDocumentStore(DocumentStore):
@@ -12,11 +12,17 @@ class InMemoryDocumentStore(DocumentStore):
         self._documents.append(doc)
         return doc
 
-    def search(self, query_embedding: List[float], limit: int = 2) -> List[Document]:
-        if self._documents:
-            return self._documents[:limit]
-
-        return []
+    def search(self, query_embedding: List[float], limit: int = 2, query_text: Optional[str] = None) -> List[Document]:
+        results = []
+        if query_text and self._documents:
+            for doc in self._documents:
+                if query_text.lower() in doc.text.lower():
+                    results.append(doc)
+                    if len(results) >= limit:
+                        break
+        if not results and self._documents:
+            results = [self._documents[0]]
+        return results
 
     def search_by_keyword(self, query: str, limit:int = 2) -> List[Document]:
         results = []

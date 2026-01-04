@@ -3,7 +3,7 @@
 -Central hub for creating components and wiring them up.
 """
 from typing import Optional
-from domain import DocumentStore, EmbeddingModel, RAGWorkFlow, StorageType
+from domain import DocumentStore, EmbeddingModel, RAGWorkFlow
 from .config import QDRANT_HOST, QDRANT_COLLECTION_NAME, VECTOR_DIMENSION
 
 #create an embbeder instance
@@ -30,7 +30,7 @@ def create_document_store(vector_size: Optional[int]) ->"DocumentStore":
             print("Connected to Qdrant")
             return store
     except Exception as e:
-        print(f"[WARNING] Qdrant connection failed: {e}")
+        print(f"⚠️  Qdrant not available. Falling back to in-memory list: {e}")
     print("Using in memory document store")
     return InMemoryDocumentStore()
 

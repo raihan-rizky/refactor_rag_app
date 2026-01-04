@@ -1,6 +1,5 @@
 from typing import List, Optional
 from domain import DocumentStore, StorageType, Document
-from infrastructure.embeddings import FakeEmbeddingService
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance
 from application import QDRANT_COLLECTION_NAME, QDRANT_HOST, VECTOR_DIMENSION
@@ -50,13 +49,17 @@ class QdrantDocumentStore(DocumentStore):
         doc = Document(id=doc_id, text=text)
         return doc
         
-    #change user question into vector then do nearest neighbor in Qdrant and return Document as object
-    def search(self, query_embedding: List[float], limit: int = 2) -> List[Document]:
+    #search using vector similarity in Qdrant
+    def search(self, query_embedding: List[float], limit: int = 2, query_text: Optional[str] = None) -> List[Document]:
         if not self._client:
             return []
-
-        embedding = FakeEmbeddingService(query_embedding)
-        hits = qdrant.search(collection_name=self._collection_name, query_vector=embedding, limit=limit)
+        
+        results = []
+        hits = self._client.search(
+            collection_name=self._collection_name, 
+            query_vector=query_embedding, 
+            limit=limit
+        )
         for hit in hits:
             doc = Document(id=hit.id, text=hit.payload["text"])
             results.append(doc)

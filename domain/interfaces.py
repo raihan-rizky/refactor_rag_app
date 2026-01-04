@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 from .models import StorageType, RAGResult, Document
 
 #'template' or abstract class for other classes
@@ -21,7 +21,7 @@ class DocumentStore(ABC):
         pass
 
     @abstractmethod
-    def search(self, query_embedding: List[float], limit: int = 2) -> List[Document]:
+    def search(self, query_embedding: List[float], limit: int = 2, query_text: Optional[str] = None) -> List[Document]:
         pass
 
     @abstractmethod

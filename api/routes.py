@@ -48,13 +48,12 @@ def add_document(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/status", response_model=StatusResponse)
+@router.get("/status", response_model=StatusResponse)
 def status(
     engine: RAGEngine = Depends(get_rag_engine)
 ) -> StatusResponse:
     return StatusResponse(
-        document_count= engine.document_count,
-        engine_ready = engine.is_ready,
-        qdrant_ready = engine.is_qdrant_ready
-        
+        qdrant_ready=engine.is_qdrant_ready,
+        in_memory_docs_count=engine.document_count,
+        graph_ready=engine.is_ready
     )
